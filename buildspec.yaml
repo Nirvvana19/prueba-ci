@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing dependencies...
+      - npm install
+  pre_build:
+    commands:
+      - echo Pre-build phase...
+      - docker --version
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t simple-pipeline-app .
+  post_build:
+    commands:
+      - echo Build completed!
+
+artifacts:
+  files:
+    - '**/*'
+  discard-paths: yes
+
