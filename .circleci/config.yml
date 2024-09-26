@@ -8,7 +8,7 @@ jobs:
     steps:
       - checkout # Clona el repositorio en CircleCI
       - run:
-          name: Instalar dependencias
+          name: Instalar dependencias v
           command: npm install
       - persist_to_workspace:
           root: .
