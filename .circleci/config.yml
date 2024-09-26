@@ -1,11 +1,12 @@
 version: 2.1
 
 jobs:
+  # Trabajo para construir la aplicación Node.js
   build:
     docker:
-      - image: circleci/node:14
+      - image: circleci/node:14 # Usa una imagen de Node.js similar a la de tu Dockerfile
     steps:
-      - checkout
+      - checkout # Clona el repositorio en CircleCI
       - run:
           name: Instalar dependencias
           command: npm install
@@ -14,16 +15,14 @@ jobs:
           paths:
             - .
 
-  docker_build:
+  # Trabajo para construir y subir la imagen a Docker Hub
+  docker_build_and_push:
     docker:
-      - image: circleci/docker:20.10
+      - image: circleci/docker:20.10 # Imagen Docker para trabajar con contenedores
     steps:
-      - checkout
+      - checkout # Clona el repositorio de nuevo para Docker
       - attach_workspace:
           at: /home/circleci/project
-      - run:
-          name: Construir la imagen Docker
-          command: docker build -t $DOCKERHUB_USERNAME/Nirvana03:latest .
 
       # Iniciar sesión en Docker Hub
       - run:
@@ -31,16 +30,26 @@ jobs:
           command: |
             echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
 
+      # Construir la imagen Docker
+      - run:
+          name: Construir la imagen Docker
+          command: docker build -t nirvana03/prueba-ci:latest .
+
       # Empujar la imagen a Docker Hub
       - run:
           name: Empujar la imagen a Docker Hub
-          command: docker push $DOCKERHUB_USERNAME/simple-pipeline-project:latest
+          command: docker push nirvana03/prueba-ci:latest
+
+      # Descargar la imagen desde Docker Hub
+      - run:
+          name: Descargar la imagen desde Docker Hub
+          command: docker pull nirvana03/prueba-ci:latest
 
 workflows:
   version: 2
   build_and_deploy:
     jobs:
       - build
-      - docker_build:
+      - docker_build_and_push:
           requires:
             - build
