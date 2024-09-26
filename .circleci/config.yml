@@ -18,7 +18,7 @@ jobs:
   # Trabajo para construir y subir la imagen a Docker Hub
   docker_build_and_push:
     docker:
-      - image: circleci/docker:20.10 # Imagen Docker para trabajar con contenedores
+      - image: docker:24.0.9 # Imagen Docker oficial disponible públicamente
     steps:
       - checkout # Clona el repositorio de nuevo para Docker
       - attach_workspace:
